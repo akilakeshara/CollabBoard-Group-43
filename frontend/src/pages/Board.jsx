@@ -206,4 +206,91 @@ const Board = () => {
     setModalState({ type: null, task: null });
   };
 
+  // --- Subtask / Label / Comment Operations ---
+  const addSubtask = () => {
+    if (!newSubtaskTitle.trim()) return;
+    setEditSubtasks([...editSubtasks, { title: newSubtaskTitle, isCompleted: false }]);
+    setNewSubtaskTitle('');
+  };
+
+  const toggleSubtask = (index) => {
+    const updated = [...editSubtasks];
+    updated[index].isCompleted = !updated[index].isCompleted;
+    setEditSubtasks(updated);
+  };
+
+  const removeSubtask = (index) => {
+    setEditSubtasks(editSubtasks.filter((_, i) => i !== index));
+  };
+
+  const addLabel = () => {
+    if (!newLabelName.trim()) return;
+    setEditLabels([...editLabels, { name: newLabelName, color: newLabelColor }]);
+    setNewLabelName('');
+  };
+
+  const removeLabel = (index) => {
+    setEditLabels(editLabels.filter((_, i) => i !== index));
+  };
+
+  const toggleAssignee = (userObj) => {
+    if (editAssignees.some(a => a._id === userObj._id)) {
+      setEditAssignees(editAssignees.filter(a => a._id !== userObj._id));
+    } else {
+      setEditAssignees([...editAssignees, userObj]);
+    }
+  };
+
+  const addComment = () => {
+    if (!newComment.trim() || !user) return;
+    const commentObj = {
+      _id: Date.now().toString(),
+      text: newComment,
+      user: { _id: user.id, name: user.name, username: user.username },
+      createdAt: new Date().toISOString()
+    };
+    setEditComments([...editComments, commentObj]);
+    setNewComment('');
+  };
+
+  const handleShare = () => {
+    const link = `http://localhost:5173/invite/${board.inviteToken}`;
+    navigator.clipboard.writeText(link);
+    alert('Invite link copied to clipboard!');
+  };
+
+  // --- Column Operations ---
+  const handleAddColumn = (e) => {
+    e.preventDefault();
+    if (!newColumnTitle.trim()) return;
+    const newColumns = [...boardColumns, { id: `col-${Date.now()}`, title: newColumnTitle }];
+    const newBoardState = { ...board, columns: newColumns };
+    setBoard(newBoardState);
+    setOfflineBoard(newBoardState);
+    if (isOnline) updateBoardBackend(board.tasks, board.version, newColumns, board.background);
+    setModalState({ type: null });
+  };
+
+  const handleRenameColumn = (e) => {
+    e.preventDefault();
+    if (!newColumnTitle.trim()) return;
+    const newColumns = boardColumns.map(c => c.id === modalState.columnId ? { ...c, title: newColumnTitle } : c);
+    const newBoardState = { ...board, columns: newColumns };
+    setBoard(newBoardState);
+    setOfflineBoard(newBoardState);
+    if (isOnline) updateBoardBackend(board.tasks, board.version, newColumns, board.background);
+    setModalState({ type: null });
+  };
+
+  const handleDeleteColumn = () => {
+    const newColumns = boardColumns.filter(c => c.id !== modalState.columnId);
+    // Delete all tasks in that column
+    const newTasks = board.tasks.filter(t => t.status !== modalState.columnId);
+    const newBoardState = { ...board, columns: newColumns, tasks: newTasks };
+    setBoard(newBoardState);
+    setOfflineBoard(newBoardState);
+    if (isOnline) updateBoardBackend(newTasks, board.version, newColumns, board.background);
+    setModalState({ type: null });
+  };
+
   
