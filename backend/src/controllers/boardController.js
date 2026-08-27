@@ -70,3 +70,42 @@ exports.updateBoard = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.renameBoard = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const board = await Board.findById(req.params.id);
+    if (!board) return res.status(404).json({ message: 'Board not found' });
+    board.name = name;
+    await board.save();
+    res.json(board);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteBoard = async (req, res) => {
+  try {
+    const board = await Board.findByIdAndDelete(req.params.id);
+    if (!board) return res.status(404).json({ message: 'Board not found' });
+    res.json({ message: 'Board deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.joinBoard = async (req, res) => {
+  try {
+    const board = await Board.findOne({ inviteToken: req.params.token });
+    if (!board) return res.status(404).json({ message: 'Invalid invite link' });
+    
+    if (!board.members.includes(req.user.id)) {
+      board.members.push(req.user.id);
+      board.activityLog.push({ action: 'Joined the board', user: req.user.id });
+      await board.save();
+    }
+    res.json({ boardId: board._id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
