@@ -41,6 +41,12 @@
 - **Real-time Engine:** Socket.io
 - **Security:** `bcryptjs` for password hashing, `jsonwebtoken` for auth
 
+### Deployment & CI/CD 🚀
+- **Containerization:** Docker & Docker Compose
+- **Web Server:** Caddy (with Auto Let's Encrypt HTTPS/SSL)
+- **CI/CD:** GitHub Actions (Automated Deployment)
+- **Cloud Hosting:** Microsoft Azure (Ubuntu Virtual Machine)
+
 ---
 
 ## 📁 Repository Structure
@@ -103,19 +109,31 @@ npm run dev
 
 ---
 
-## 🐳 Quick Start (Docker)
-If you prefer running the app via Docker without manual setup:
+## 🐳 Production Deployment
+
+This application is fully containerized and features an automated CI/CD pipeline using **GitHub Actions**.
+
+### Architecture
+- **Frontend (Caddy):** The React SPA is built and served via a `caddy:alpine` container. Caddy automatically provisions and renews SSL certificates (HTTPS) via Let's Encrypt and acts as a reverse proxy for API traffic.
+- **Backend (Node.js):** Runs in a separate container, securely isolated from direct public access. API and WebSocket (`Socket.io`) requests are seamlessly proxied by Caddy.
+
+### CI/CD Pipeline
+Whenever code is pushed to the `main` branch, the GitHub Actions workflow automatically:
+1. Connects to the Azure VM via SSH.
+2. Pulls the latest code.
+3. Injects secrets (MongoDB URI, JWT secret) securely via GitHub Secrets.
+4. Rebuilds and restarts the Docker containers without downtime.
+
+### Manual Docker Start
+If you prefer running the app via Docker locally:
 
 1. Ensure Docker and Docker Compose are installed.
-2. Run the application from the root directory:
+2. Create a `.env` file in the root directory with `MONGODB_URI` and `JWT_SECRET`.
+3. Run the application:
    ```bash
    docker-compose up -d --build
    ```
-3. Access the application:
-   - **Frontend:** `http://localhost:5173`
-   - **Backend API:** `http://localhost:5001`
-
-*(Note: Ensure your `docker-compose.yml` reflects the correct ports if using Docker)*
+4. Access the application at `http://localhost` (or your configured domain).
 
 ---
 
