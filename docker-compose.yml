@@ -17,8 +17,8 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://collabboard.yourdomain.com:5001
-        - VITE_SOCKET_URL=http://collabboard.yourdomain.com:5001
+        - VITE_API_URL=http://collabboard.zentaksolutions.me:5001
+        - VITE_SOCKET_URL=http://collabboard.zentaksolutions.me:5001
     container_name: collabboard-frontend
     restart: unless-stopped
     ports:
