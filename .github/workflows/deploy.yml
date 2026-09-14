@@ -26,9 +26,8 @@ jobs:
           # Pull latest changes from git
           git pull origin main
           
-          # Create .env file from GitHub Secrets
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          # Ensure we don't overwrite .env if secrets are missing
+          # (User will manage .env manually on the VM for now)
           
           # Build and run containers
           sudo docker-compose down
