@@ -17,6 +17,12 @@
 
 ---
 
+## 🟢 Live Demonstration
+- **Frontend (Web Application):** [https://collabboard.zentaksolutions.me](https://collabboard.zentaksolutions.me)
+- **Backend (API Base URL):** [https://collabboard.zentaksolutions.me/api](https://collabboard.zentaksolutions.me/api)
+
+---
+
 ## ✨ Features
 
 - **Real-time Collaboration:** Instant updates across all connected clients using WebSockets (`Socket.io`).
