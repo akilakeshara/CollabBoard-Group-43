@@ -77,7 +77,7 @@ const Board = () => {
 
   const fetchBoard = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/boards/${id}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || ((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '')}/api/boards/${id}`);
       setBoard(res.data);
       setOfflineBoard(res.data);
     } catch (error) {
@@ -92,7 +92,7 @@ const Board = () => {
       if (columns) payload.columns = columns;
       if (background !== undefined) payload.background = background;
       
-      const res = await axios.put(`http://localhost:5001/api/boards/${id}`, payload);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || ((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '')}/api/boards/${id}`, payload);
       setBoard(res.data);
       setOfflineBoard(res.data);
     } catch (error) {
@@ -254,7 +254,7 @@ const Board = () => {
   };
 
   const handleShare = () => {
-    const link = `http://localhost:5173/invite/${board.inviteToken}`;
+    const link = `${import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'}/invite/${board.inviteToken}`;
     navigator.clipboard.writeText(link);
     alert('Invite link copied to clipboard!');
   };

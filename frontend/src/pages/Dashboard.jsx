@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const fetchBoards = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/boards');
+      const res = await axios.get(((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api/boards'));
       setBoards(res.data);
     } catch (error) {
       console.error('Failed to fetch boards', error);
@@ -29,7 +29,7 @@ const Dashboard = () => {
     e.preventDefault();
     if (!newBoardName.trim()) return;
     try {
-      const res = await axios.post('http://localhost:5001/api/boards', { name: newBoardName });
+      const res = await axios.post(((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api/boards'), { name: newBoardName });
       setBoards([...boards, res.data]);
       setNewBoardName('');
     } catch (error) {
@@ -50,7 +50,7 @@ const Dashboard = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5001/api/boards/${modalState.board._id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL || ((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '')}/api/boards/${modalState.board._id}`);
       setBoards(boards.filter(b => b._id !== modalState.board._id));
       setModalState({ type: null, board: null });
     } catch (error) {
@@ -65,7 +65,7 @@ const Dashboard = () => {
       return;
     }
     try {
-      const res = await axios.put(`http://localhost:5001/api/boards/${modalState.board._id}/rename`, { name: editInput });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || ((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '')}/api/boards/${modalState.board._id}/rename`, { name: editInput });
       setBoards(boards.map(b => (b._id === modalState.board._id ? res.data : b)));
       setModalState({ type: null, board: null });
     } catch (error) {

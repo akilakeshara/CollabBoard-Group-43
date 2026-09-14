@@ -1,0 +1,35 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          # Go to the project directory (Assuming you cloned it to ~/CollabBoard-Group-43)
+          cd ~/CollabBoard-Group-43
+          
+          # Pull latest changes from git
+          git pull origin main
+          
+          # Create .env file from GitHub Secrets
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          
+          # Build and run containers
+          sudo docker-compose down
+          sudo docker-compose up -d --build

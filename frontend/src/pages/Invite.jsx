@@ -20,7 +20,7 @@ const Invite = () => {
 
   const joinBoard = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/boards/join/${token}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || ((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '')}/api/boards/join/${token}`);
       if (res.data.boardId) {
         navigate(`/board/${res.data.boardId}`);
       }
