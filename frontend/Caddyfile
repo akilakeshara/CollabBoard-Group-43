@@ -1,4 +1,12 @@
+{
+    email akilakeshara@gmail.com
+}
+
 collabboard.zentaksolutions.me {
+    tls {
+        issuer zerossl
+    }
+    
     encode gzip
 
     handle /api/* {
