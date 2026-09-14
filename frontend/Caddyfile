@@ -1,0 +1,16 @@
+collabboard.zentaksolutions.me {
+    # Serve frontend SPA
+    root * /srv
+    encode gzip
+    try_files {path} /index.html
+    file_server
+
+    # Reverse proxy backend API and Socket.IO
+    handle_path /api/* {
+        reverse_proxy backend:5001
+    }
+    
+    handle /socket.io/* {
+        reverse_proxy backend:5001
+    }
+}

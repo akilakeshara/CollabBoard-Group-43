@@ -6,6 +6,7 @@ services:
       context: ./backend
     container_name: collabboard-backend
     restart: unless-stopped
+    # We no longer need to expose 5001 to the public, Caddy handles it. But we can leave it for debugging.
     ports:
       - "5001:5001"
     environment:
@@ -17,11 +18,13 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://collabboard.zentaksolutions.me:5001
-        - VITE_SOCKET_URL=http://collabboard.zentaksolutions.me:5001
+        - VITE_API_URL=https://collabboard.zentaksolutions.me
+        - VITE_SOCKET_URL=https://collabboard.zentaksolutions.me
+        - VITE_FRONTEND_URL=https://collabboard.zentaksolutions.me
     container_name: collabboard-frontend
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - backend
